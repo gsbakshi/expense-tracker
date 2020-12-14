@@ -10,13 +10,18 @@ class TransactionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      // padding: EdgeInsets.symmetric(
-      //   vertical: 10,
-      // ),
-      // itemBuilder: (ctx, index) => txCard(transactions[index]),
-      shrinkWrap: true,
-      children: transactions.map((tx) => txCard(tx)).toList(),
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      // height: MediaQuery.of(context).size.height,
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (ctx, index) {
+          return txCard(transactions[index]);
+        },
+        itemCount: transactions.length,
+      ),
     );
   }
 }
