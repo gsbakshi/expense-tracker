@@ -1,0 +1,43 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import './widgets/chart.dart';
+import './widgets/user_transactions.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Expense Tracker',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.lightGreen,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Expense Tracker'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            chart(),
+            UserTransactions(),
+          ],
+        ),
+      ),
+    );
+  }
+}
