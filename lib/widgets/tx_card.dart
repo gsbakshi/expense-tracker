@@ -3,57 +3,34 @@ import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
-Widget txCard(Transaction tx) {
-  return Container(
+Widget txCard(Transaction tx, ctx) {
+  return Card(
     margin: EdgeInsets.symmetric(
       vertical: 2,
       horizontal: 8,
     ),
-    child: Card(
-      child: Row(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            decoration: BoxDecoration(
-              color: Colors.green[400],
-              borderRadius: BorderRadius.all(
-                Radius.circular(6),
-              ),
-            ),
-            padding: EdgeInsets.all(10),
+    elevation: 5,
+    child: ListTile(
+      leading: CircleAvatar(
+        radius: 30,
+        child: Padding(
+          padding: EdgeInsets.all(6),
+          child: FittedBox(
             child: Text(
-              '\$${tx.amount}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.white.withOpacity(1),
-              ),
+              '\$${tx.amount.toStringAsFixed(2)}',
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 4,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  tx.title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  DateFormat.yMMMd().format(tx.date),
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
+        ),
+      ),
+      title: Text(
+        tx.title,
+        style: Theme.of(ctx).textTheme.headline6,
+      ),
+      subtitle: Text(
+        DateFormat.yMMMd().format(tx.date),
+        style: TextStyle(
+          color: Colors.grey,
+        ),
       ),
     ),
   );

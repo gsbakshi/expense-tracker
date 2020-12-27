@@ -1,6 +1,7 @@
-import 'package:expense_tracker/models/transaction.dart';
 import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
 
+import './../models/transaction.dart';
 import 'tx_card.dart';
 
 class TransactionsList extends StatelessWidget {
@@ -14,14 +15,42 @@ class TransactionsList extends StatelessWidget {
       margin: EdgeInsets.symmetric(
         vertical: 10,
       ),
-      // height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemBuilder: (ctx, index) {
-          return txCard(transactions[index]);
-        },
-        itemCount: transactions.length,
-      ),
+      child: transactions.isEmpty
+          ? Column(
+              children: <Widget>[
+                Text('No transactions added yet'),
+                Container(
+                  height: MediaQuery.of(context).size.height / 4,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 30,
+                  ),
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
+                  ),
+                )
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Text(
+                //   '${DateFormat.yMMMd().format(DateTime.now())}',
+                // ),
+                // ListView.builder(itemBuilder: (ctx, index) {
+                //   return Container(
+                //     color: Colors.black,
+                //   )
+                // },),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (ctx, index) {
+                    return txCard(transactions[index], ctx);
+                  },
+                  itemCount: transactions.length,
+                ),
+              ],
+            ),
     );
   }
 }
