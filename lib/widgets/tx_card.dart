@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
-Widget txCard(Transaction tx, ctx) {
+Widget txCard(Transaction tx, ctx, Function removeTx) {
   return Card(
     margin: EdgeInsets.symmetric(
       vertical: 2,
@@ -32,6 +32,18 @@ Widget txCard(Transaction tx, ctx) {
           color: Colors.grey,
         ),
       ),
+      trailing: MediaQuery.of(ctx).size.width > 460
+          ? FlatButton.icon(
+              onPressed: () => removeTx(tx.id),
+              icon: Icon(Icons.delete),
+              textColor: Theme.of(ctx).errorColor,
+              label: Text('Delete'),
+            )
+          : IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () => removeTx(tx.id),
+              color: Theme.of(ctx).errorColor,
+            ),
     ),
   );
 }

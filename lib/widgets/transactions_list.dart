@@ -6,23 +6,27 @@ import 'tx_card.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTx;
 
-  TransactionsList(this.transactions);
+  TransactionsList(
+    this.transactions,
+    this.deleteTx,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: 10,
-      ),
-      child: transactions.isEmpty
-          ? Column(
+    return transactions.isEmpty
+        ? LayoutBuilder(builder: (ctx, constraints) {
+            return Column(
               children: <Widget>[
-                Text('No transactions added yet'),
+                Text(
+                  'No transactions added yet',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
                 Container(
-                  height: MediaQuery.of(context).size.height / 4,
-                  margin: EdgeInsets.symmetric(
-                    vertical: 30,
+                  height: constraints.maxHeight * 0.6,
+                  margin: EdgeInsets.only(
+                    top: 30,
                   ),
                   child: Image.asset(
                     'assets/images/waiting.png',
@@ -30,27 +34,19 @@ class TransactionsList extends StatelessWidget {
                   ),
                 )
               ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Text(
-                //   '${DateFormat.yMMMd().format(DateTime.now())}',
-                // ),
-                // ListView.builder(itemBuilder: (ctx, index) {
-                //   return Container(
-                //     color: Colors.black,
-                //   )
-                // },),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (ctx, index) {
-                    return txCard(transactions[index], ctx);
-                  },
-                  itemCount: transactions.length,
-                ),
-              ],
-            ),
-    );
+            );
+          })
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (ctx, index) {
+                  return txCard(transactions[index], ctx, deleteTx);
+                },
+                itemCount: transactions.length,
+              ),
+            ],
+          );
   }
 }
