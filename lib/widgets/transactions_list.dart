@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 
 import './../models/transaction.dart';
-import 'tx_card.dart';
+import 'transaction_item.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -24,8 +24,8 @@ class TransactionsList extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 Container(
-                  height: constraints.maxHeight * 0.6,
-                  margin: EdgeInsets.only(
+                  height: constraints.maxHeight * 0.3,
+                  margin: const EdgeInsets.only(
                     top: 30,
                   ),
                   child: Image.asset(
@@ -36,17 +36,15 @@ class TransactionsList extends StatelessWidget {
               ],
             );
           })
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: (ctx, index) {
-                  return txCard(transactions[index], ctx, deleteTx);
-                },
-                itemCount: transactions.length,
-              ),
-            ],
+        : ListView.builder(
+            // shrinkWrap: true,
+            itemBuilder: (ctx, index) {
+              return TransactionItem(
+                tx: transactions[index],
+                removeTx: deleteTx,
+              );
+            },
+            itemCount: transactions.length,
           );
   }
 }

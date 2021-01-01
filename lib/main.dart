@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-// import 'package:flutter/services.dart'; // ## Make the app orientation fixed in Portrait Up mode ##
+// import 'package:flutter/services.dart'; // ## 1
 
 import 'widgets/chart.dart';
 import 'widgets/new_transaction.dart';
@@ -16,7 +16,7 @@ void main() {
   // SystemChrome.setPreferredOrientations(
   //   [DeviceOrientation.portraitUp],
   // );
-  // ##
+  // ## 1
   runApp(MyApp());
 }
 
@@ -101,7 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate) {
+    String txTitle,
+    double txAmount,
+    DateTime chosenDate,
+  ) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: txTitle,
@@ -135,13 +138,94 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final _query = MediaQuery.of(context);
+  Widget txListWidget(double screenHeight) {
+    return Container(
+      height: screenHeight,
+      margin: const EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      child: TransactionsList(
+        _userTransactions,
+        _deleteTransaction,
+      ),
+    );
+  }
 
-    final _isLandscape = _query.orientation == Orientation.landscape;
+  List<Widget> _buildLandscapeContent(
+    double height,
+    Widget txListWidget,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Text(
+              'Show Chart',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          Switch.adaptive(
+            activeColor: Theme.of(context).accentColor,
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          ),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: height * 0.75,
+              child: Chart(_recentTransactions),
+            )
+          : txListWidget,
+    ];
+  }
 
-    final PreferredSizeWidget appBar = Platform.isIOS
+  List<Widget> _buildPortraitContent(
+    double height,
+    Widget txListWidget,
+  ) {
+    return [
+      Container(
+        height: height * 0.25,
+        child: Chart(_recentTransactions),
+      ),
+      txListWidget,
+    ];
+  }
+
+  Widget _buildBody(
+    double height,
+    bool landscape,
+  ) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (landscape)
+              ..._buildLandscapeContent(
+                height,
+                txListWidget(height),
+              ),
+            if (!landscape)
+              ..._buildPortraitContent(
+                height,
+                txListWidget(height),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return Platform.isIOS
         ? CupertinoNavigationBar(
             backgroundColor: Theme.of(context).appBarTheme.color,
             middle: Text('Expense Tracker'),
@@ -168,60 +252,29 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final query = MediaQuery.of(context);
+    final isLandscape = query.orientation == Orientation.landscape;
+
+    final PreferredSizeWidget appBar = _buildAppBar();
 
     final screenHeight =
-        (_query.size.height - appBar.preferredSize.height - _query.padding.top);
+        query.size.height - appBar.preferredSize.height - query.padding.top;
 
-    final txListWidget = Container(
-      height: screenHeight * 0.75,
-      margin: EdgeInsets.symmetric(
-        vertical: 10,
-      ),
-      child: TransactionsList(
-        _userTransactions,
-        _deleteTransaction,
-      ),
+    final pageBody = _buildBody(
+      screenHeight,
+      isLandscape,
     );
 
-    final txChartWidget = Container(
-      height: _isLandscape ? screenHeight * 0.75 : screenHeight * 0.25,
-      child: Chart(_recentTransactions),
-    );
-
-    final pageBody = SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            if (_isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Text(
-                      'Show Chart',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                  ),
-                  Switch.adaptive(
-                    activeColor: Theme.of(context).accentColor,
-                    value: _showChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _showChart = val;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            if (!_isLandscape) txChartWidget,
-            if (!_isLandscape) txListWidget,
-            if (_isLandscape) _showChart ? txChartWidget : txListWidget,
-          ],
-        ),
-      ),
-    );
+    final fab = Platform.isIOS
+        ? Container()
+        : FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => _triggerNewTx(context),
+          );
 
     return Platform.isIOS
         ? CupertinoPageScaffold(
@@ -233,12 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
             body: pageBody,
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: Platform.isIOS
-                ? Container()
-                : FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () => _triggerNewTx(context),
-                  ),
+            floatingActionButton: fab,
           );
   }
 }
