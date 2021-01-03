@@ -40,6 +40,7 @@ class TransactionsList extends StatelessWidget {
             // shrinkWrap: true,
             itemBuilder: (ctx, index) {
               return TransactionItem(
+                // key: ValueKey(transactions[index].id),
                 tx: transactions[index],
                 removeTx: deleteTx,
               );

@@ -1,7 +1,8 @@
-// import 'dart:io';
+import 'dart:io';
 
 import 'package:expense_tracker/widgets/adaptive/adaptive_button.dart';
 import 'package:expense_tracker/widgets/adaptive/adaptive_textfields.dart';
+import 'package:expense_tracker/widgets/cupertino_date_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -44,33 +45,47 @@ class _NewTransactionState extends State<NewTransaction> {
     Navigator.of(context).pop();
   }
 
-  void _presentDatePicker() {
-    // Platform.isIOS
-    //     ? CupertinoDatePicker(
-    //         initialDateTime: DateTime.now(),
-    //         maximumDate: DateTime.now(),
-    //         minimumDate: DateTime(2019),
-    //         mode: CupertinoDatePickerMode.date,
-    //         onDateTimeChanged: (DateTime pickedDate) {
-    //           print(pickedDate);
-    //         },
-    //       )
-    //     :
-    showDatePicker(
+  void _selectorHandler(DateTime _date) {
+    setState(() {
+      _selectedDate = _date;
+    });
+  }
+
+  void _cupertinoDatePicker(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2019),
-      lastDate: DateTime.now(),
-    ).then(
-      (pickedDate) {
-        if (pickedDate == null) {
-          return;
-        }
-        setState(() {
-          _selectedDate = pickedDate;
-        });
-      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(12),
+        ),
+      ),
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      elevation: 5,
+      isScrollControlled: true,
+      builder: (_) => CupertinoDateSelector(
+        selector: _selectorHandler,
+      ),
     );
+  }
+
+  void _presentDatePicker() {
+    Platform.isIOS
+        ? _cupertinoDatePicker(context)
+        : showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2019),
+            lastDate: DateTime.now(),
+          ).then(
+            (pickedDate) {
+              if (pickedDate == null) {
+                return;
+              }
+              setState(() {
+                _selectedDate = pickedDate;
+              });
+            },
+          );
   }
 
   @override

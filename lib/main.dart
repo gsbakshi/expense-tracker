@@ -205,7 +205,9 @@ class _MyHomePageState extends State<MyHomePage> {
   ) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (landscape)
@@ -275,7 +277,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Icon(Icons.add),
             onPressed: () => _triggerNewTx(context),
           );
-
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: appBar,
@@ -284,8 +285,9 @@ class _MyHomePageState extends State<MyHomePage> {
         : Scaffold(
             appBar: appBar,
             body: pageBody,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: isLandscape
+                ? FloatingActionButtonLocation.endFloat
+                : FloatingActionButtonLocation.centerFloat,
             floatingActionButton: fab,
           );
   }

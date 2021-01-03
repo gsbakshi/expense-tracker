@@ -16,18 +16,25 @@ class TransactionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(
-        vertical: 2,
-        horizontal: 8,
+        vertical: 6,
+        horizontal: 12,
       ),
-      elevation: 5,
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: ListTile(
-        leading: CircleAvatar(
-          radius: 30,
+        leading: Material(
+          color: Theme.of(context).primaryColorLight,
+          borderRadius: BorderRadius.circular(12),
+          // radius: 30,
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(12),
             child: FittedBox(
               child: Text(
                 '\$${tx.amount.toStringAsFixed(2)}',
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      fontWeight: FontWeight.w500,
+                      // color: Theme.of(context).textTheme.button.color,
+                    ),
               ),
             ),
           ),
