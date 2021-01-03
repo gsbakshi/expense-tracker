@@ -22,16 +22,16 @@ A Simple Expense Tracking App, where a user can add a list of transactions and v
 Simulator used was an iPhone 12 Pro Max.
 
 ### In Portrait Mode
-<div style="display:flex">
-    <img src="/Screenshots/1.png" alt="Screenshot" width="250">
-    <img src="/Screenshots/2.png" alt="Screenshot" width="250">
-    <img src="/Screenshots/3.png" alt="Screenshot" width="250">
-    <img src="/Screenshots/4.png" alt="Screenshot" width="250">
-    <img src="/Screenshots/5.png" alt="Screenshot" width="250">
+<div style="display:flex; justify-content:space-between;">
+    <img src="/Screenshots/1.png" alt="Screenshot" width=30%>
+    <img src="/Screenshots/2.png" alt="Screenshot" width=30%>
+    <img src="/Screenshots/3.png" alt="Screenshot" width=30%>
+    <img src="/Screenshots/4.png" alt="Screenshot" width=30%>
+    <img src="/Screenshots/5.png" alt="Screenshot" width=30%>
 </div>
 
 ### In Landscape Mode
-<div style="display:flex">
+<div style="display:flex; justify-content:space-between;">
     <img src="/Screenshots/S1.png" alt="Screenshot" width=45%>
     <img src="/Screenshots/S2.png" alt="Screenshot" width=45%>
     <img src="/Screenshots/S3.png" alt="Screenshot" width=45%>
